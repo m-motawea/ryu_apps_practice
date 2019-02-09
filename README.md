@@ -3,7 +3,9 @@ applications in ryubook with scripts to prepare the environment
 
 ### Requirements:
 1- Open vSwitch ($ dnf install openvswitch -y)
+
 2- python3.6
+
 3- ryu ($ pip3.6 install ryu)
 
 ### Run:
