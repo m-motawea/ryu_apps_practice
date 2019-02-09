@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ns_array=(h1 h2 h3 h4 h5 h6)
-if_array=(h1-ns h2-ns h3-ns h4-ns h5-ns h6-ns)
+if_array=(h1-ns h2-ns h3-ns h4-ns h5-ns h6-ns s1-s2 s1-s3 s2-s3)
 br_array=(of-switch-1 of-switch-2 of-switch-3)
 
 
