@@ -1,4 +1,4 @@
-# ryu_apps
+# ryu_apps_practice
 applications in ryubook with scripts to prepare the environment
 
 ### Requirements:
