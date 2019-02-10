@@ -1,6 +1,5 @@
 # ryu_apps_practice
-applications in ryubook with scripts to prepare the environment
-
+ryu practice apps with scripts to prepare the environment
 ### Requirements:
 1- Open vSwitch ($ dnf install openvswitch -y)
 
