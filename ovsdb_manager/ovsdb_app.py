@@ -21,6 +21,8 @@ class OvsdbManager(app_manager.RyuApp):
         if ovsdb.bridge_exists(self, system_id, "ryu-bridge"):
             self.create_port(system_id, "ryu-bridge", "h1-sw")
             self.create_port(system_id, "ryu-bridge", "h2-sw")
+            self.set_controller(system_id, "ryu-bridge", "tcp:127.0.0.1:6633")
+            self.set_openflow_versions(system_id, "ryu-bridge", ["OpenFlow13"])
 
     def create_port(self, system_id, bridge_name, name):
         new_iface_uuid = uuid.uuid4()
@@ -71,3 +73,65 @@ class OvsdbManager(app_manager.RyuApp):
         else:
             self.logger.info('created bridge %s with uuid %s successfully', bridge_name, new_bridge_uuid.hex)
         return rep.insert_uuids[new_bridge_uuid]
+
+
+    def set_controller(self, system_id, bridge_name, controller_url, bridge_uuid=None):
+        new_controller_uuid = uuid.uuid4()
+
+        def _set_controller(tables, insert):
+            controller = insert(tables['Controller'], new_controller_uuid)
+            controller.target = controller_url
+            bridge = None
+            if bridge_uuid:
+                bridge = tables['Bridge'].rows.get(bridge_uuid)
+            else:
+                bridges = list(tables['Bridge'].rows.values())
+                for br in bridges:
+                    if br.name == bridge_name:
+                        bridge = br
+                        break
+            if bridge:
+                bridge.controller = [controller]
+
+            return (new_controller_uuid, )
+
+        req = ovsdb_event.EventModifyRequest(system_id, _set_controller)
+        rep = self.send_request(req)
+
+        if rep.status != 'success':
+            self.logger.error('Error adding controller %s: %s',
+                              controller_url, rep.status)
+            return None
+        else:
+            self.logger.info('added controller %s with uuid %s to bridge %s successfully', controller_url,
+                             new_controller_uuid.hex, bridge_name)
+        return rep.insert_uuids[new_controller_uuid]
+
+    def set_openflow_versions(self, system_id, bridge_name, protocols=[], bridge_uuid=None):
+
+        def _set_openflow_versions(tables, insert):
+            bridge = None
+            if bridge_uuid:
+                bridge = tables['Bridge'].rows.get(bridge_uuid)
+            else:
+                bridges = list(tables['Bridge'].rows.values())
+                for br in bridges:
+                    if br.name == bridge_name:
+                        bridge = br
+                        break
+
+            if bridge:
+                bridge.protocols = protocols
+
+            return (bridge.uuid, ) if bridge else ()
+
+        req = ovsdb_event.EventModifyRequest(system_id, _set_openflow_versions)
+        rep = self.send_request(req)
+
+        if rep.status != 'success':
+            self.logger.error('Error setting openflow protocols %s: %s',
+                              protocols, rep.status)
+            return None
+        else:
+            self.logger.info('OpenFlow protocols %s added to bridge %s successfully', str(protocols), bridge_name)
+        return rep
