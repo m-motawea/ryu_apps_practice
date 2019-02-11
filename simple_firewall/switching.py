@@ -6,7 +6,7 @@ from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 
-from constants import SWITCH_TABLE_ID
+from .constants import SWITCH_TABLE_ID
 
 
 class Switch13(app_manager.RyuApp):

@@ -1,5 +1,5 @@
 from ryu.controller.controller import Datapath
-from constants import FIREWALL_TABLE_ID
+from .constants import FIREWALL_TABLE_ID
 
 
 class RuleBase(object):
