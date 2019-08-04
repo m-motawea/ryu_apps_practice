@@ -10,7 +10,7 @@ creds = pika.PlainCredentials(
         password="root"
     )
 params = pika.ConnectionParameters(
-        host="192.168.23.128",
+        host="127.0.0.1",
         credentials=creds
     )
 
