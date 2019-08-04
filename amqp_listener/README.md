@@ -1,7 +1,7 @@
 ### AMQP_Listener
 
 ##### Description:
-This is a simple example of listening to generate Ryu events based on messages received on RabbitMQ queue.
+This is a simple example of generating Ryu events based on messages received on RabbitMQ queue.
 
 
 ##### Requirements:
